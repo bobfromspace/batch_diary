@@ -4,6 +4,9 @@ chcp 65001
 
 echo Привет, Нина! :)
 
+::Set the directory name; Replace it in your script
+set "dirname=C:\Users\nailc\Documents\diary\"
+
 ::Get the date
 for /f %%# in ('wmic os get localdatetime^|findstr .') do if "%%#" neq "" set date=%%#
 set year=%date:~,4%
@@ -40,11 +43,11 @@ if %month%==12 (set mname=Декабря
 	set fname=dec)
 
 ::Make relevant directory
-if not exist "C:\Users\nailc\Documents\diary\%year%" mkdir "C:\Users\nailc\Documents\diary\%year%"
-if not exist "C:\Users\nailc\Documents\diary\%year%\%month%" mkdir "C:\Users\nailc\Documents\diary\%year%\%month%"
+if not exist "%dirname%%year%" mkdir "%dirname%%year%"
+if not exist "%dirname%%year%\%month%" mkdir "%dirname%%year%\%month%"
 
 ::Assign the name of the file
-set "filename=C:\Users\nailc\Documents\diary\%year%\%month%\%day%_%fname%.tex"
+set "filename=%dirname%%year%\%month%\%day%_%fname%.tex"
 
 ::Enter the title
 set /P "entry_title=Введи название записи в дневнике:"
@@ -63,7 +66,7 @@ echo %currenttime% >> %filename%
 echo \end{diary} >> %filename%
 
 ::Add the record for the diary entry in the toc
-set "mainmatter=C:\Users\nailc\Documents\diary\mainmatter.tex"
+set "mainmatter=%dirname%mainmatter.tex"
 
 echo \input{./%year%/%month%/%day%_%fname%} >> %mainmatter%
 echo \addcontentsline{toc}{subsection}{%entry_title%} >> %mainmatter%
@@ -72,7 +75,7 @@ echo \addcontentsline{toc}{subsection}{%entry_title%} >> %mainmatter%
 ::1) Specification of the book
 ::2) List of entries for each month and their assignment to toc
 ::3) Backmatter of the diary
-type C:\Users\nailc\Documents\diary\main.tex %mainmatter% C:\Users\nailc\Documents\diary\backmatter.tex > C:\Users\nailc\Documents\diary\diary.tex
+type %dirname%main.tex %mainmatter% %dirname%backmatter.tex > %dirname%diary.tex
 
 ::Start Sublime Text 3 to edit the file; Replace with your favourite text/LaTeX editor
 subl %filename%
