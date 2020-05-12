@@ -53,29 +53,22 @@ set "filename=%dirname%%year%\%month%\%day%_%fname%.tex"
 set /P "entry_title=Введи название записи в дневнике:"
 
 ::LaTeX markup
-echo \begin{diary}{%entry_title%.}{%day% %mname%} > %filename%
-echo \mybox{ >> %filename%
-echo \begin{itemize} >> %filename%
-echo \item >> %filename%
-echo \item >> %filename%
-echo \item >> %filename%
-echo \end{itemize}} >> %filename%
+echo \subsection*{%day% %mname% --- %entry_title%} > %filename%
+echo \addcontentsline{toc}{subsection}{%day% %mname% --- %entry_title%} >> %filename%
 echo: >> %filename%
 echo: >> %filename%
 echo %currenttime% >> %filename%
-echo \end{diary} >> %filename%
 
 ::Add the record for the diary entry in the toc
 set "mainmatter=%dirname%mainmatter.tex"
+set "backmatter=%dirname%backmatter.tex"
 
 echo \input{./%year%/%month%/%day%_%fname%} >> %mainmatter%
-echo \addcontentsline{toc}{subsection}{%entry_title%} >> %mainmatter%
 
 ::Assemble the document with toc as a book with chapters: 
-::1) Specification of the book
 ::2) List of entries for each month and their assignment to toc
 ::3) Backmatter of the diary
-type %dirname%main.tex %mainmatter% %dirname%backmatter.tex > %dirname%diary.tex
+type %mainmatter% %backmatter% > %dirname%diary.tex
 
 ::Start Sublime Text 3 to edit the file; Replace with your favourite text/LaTeX editor
 subl %filename%
